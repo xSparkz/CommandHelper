@@ -1,0 +1,15 @@
+killnear:/killnear $radius $permission = >>>
+
+    @radius = $radius
+    @ploc = get_command_block()
+    @plrs = players_in_radius(@ploc,@radius)
+    @permission = $permission
+
+    foreach(@plr in @plrs){
+        if(!has_permission(@plr,@permission)){
+            pkill(@plr)
+            broadcast(@plr.color(red).' was vaporized by the security door. Poof!')
+        }
+    }
+
+<<<

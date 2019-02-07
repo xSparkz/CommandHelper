@@ -1,0 +1,36 @@
+maxHearts: 40
+buffs:
+- /effect <plr> 5 9999 10 true
+- /effect <plr> 11 9999 2 true
+- /effect <plr> 12 9999 1 true
+- /effect <plr> 13 9999 1 true
+- /shot give <plr> kiblast
+- /shot give <plr> kamehameha
+- /give <plr> minecraft:iron_sword
+chatcolor: '&9'
+class: trunks
+haste: 5
+jump: 5
+name: §9T§1ru§8nk§9s
+op: 'false'
+permissions:
+  superherocity:
+  - ch.alias.dismountplayer
+  - ch.alias.carryplayer
+  - essentials.fly
+  - essentials.speed.fly
+  - essentials.speed
+powers:
+- /buff
+- /jump <0-5>
+- /run <0-5>
+- /haste <0-5>
+- /flyspeed <number>
+- /fly
+- /carryplayer
+- /dismountplayer
+run: 5
+sig: PxLbYcD92wWP1oeMzLImutwM1CQ5qRpjAshBNoB0wlsVaD5FNMbgvcRL9RVqLFfgHHB8LZblLmVGp+Z8YwIt8u/OXUYqnsCXWR9jvGXMWpZh+DPkMB9Ou6guNIheUAutMMa+s+uWkODZOQ9jCMZeLWmHS4F4XAXnyD4rGo0TuYC1WV2Fd7g2wbBHiC2gzGNgFuObrF/OiiNg5ciOguHldXo9arWcBVAu6wtu1L7KXYvh+M82HzZRUF+G3XzohumcUO4Ta2kA6m94skEr02UI/lbjOqiEXUQVG6+Dy7EBuSTpnGYeI6TMH9v+6Xa8bDSGFGzYho2e85kYHHaSXwZvHmvJBHqDrYGSXDn9/I6LUgQoPBxZZbNuZmQ8D25K/qE8f3kjJZ3dpqhekhC69F+eM5pFuuKhykv5h6ic50rQARDccjXTLph0QlHBOCXDzfXLG4NClQiWEDEgROySp5mkl4EGDCQht6qKx8yLmxGGZeSymP5aMUMuIp6xxGToXac9pOjv+TzG/ed2Del2pzXykY+aU3hVYqC59oMiaEEAF63u0tEoa93n0A2BL0OPqlrWLoRF27Cx3nRsLR2VlB8aG0s8Ph2TRaxPN1oiKN9kBciDI/K5ZHY3pMHbADuJ71WycTQ0jDzoZeFp/DUAvwgSUDaFQ+QI/fH95MtkhE92SoI=
+speech: I am a trunk!
+trail: ''
+val: eyJ0aW1lc3RhbXAiOjE1MTk0OTM1MDQ3MDEsInByb2ZpbGVJZCI6Ijg3ZmIzYzZjNWZmNjRiZjZiMzI2OTkyYzYxMzdlYTEyIiwicHJvZmlsZU5hbWUiOiJKaXJlbl9UaGVfR3JleSIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjhjMGM5OWVhMGI3Y2RjNGE0NDg1MjJmZjJhYWZmNTc4Zjk3NjU0YTlhNDY3MmYyYzQ1MmFjMmZhMzY0OTgzIn19fQ==

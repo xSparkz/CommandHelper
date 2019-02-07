@@ -1,0 +1,71 @@
+startinfectiontag:/startinfectiontag $infectionStartWarp $infectionItWarp $world = >>>
+
+    @warp = $infectionStartWarp
+    @itWarp = $infectionItWarp
+    @world = $world
+    
+    @plrs = all_players(@world)
+    @numPlayers = array_size(@plrs)
+
+    if(@numPlayers <= 2){
+        broadcast(color(red).'You need at least 3 people to play Infection Tag!')
+        die()
+    }
+    @it = rand(0,@numPlayers)
+    @plrIt = @plrs[@it]
+    broadcast(@plrIt.color(red).' is it!')
+    foreach(@plr in @plrs){
+        if(@plr == @plrIt){
+            sudo('/warp '.@itWarp.' '.@plr)
+        }else{
+            sudo('/warp '.@warp.' '.@plr)
+        }
+        sudo('/heal '.@plr)
+        export(puuid(@plr).'isItInfectionTag',false)
+    }
+    export(puuid(@plrIt).'isItInfectionTag',true)
+    unbind('infectionTag')
+    bind(entity_damage_player,associative_array('id':'infectionTag'),null,@e,@world){
+        @plrr = @e['player']
+        @dmgr = @e['id']
+        console(@dmgr)
+        if(import(puuid(@plrr).'isItInfectionTag') == false && import(@dmgr.'isItInfectionTag') == true && @e['location']['world'] == @world){
+            export(puuid(@plrr).'isItInfectionTag',true)
+            @plrs = all_players(@world)
+            @numActive = 0
+            @winner = ''
+            foreach(@plr in @plrs){
+                if(import(puuid(@plr).'isItInfectionTag') == false){
+                    @numActive++
+                    @winner = @plr
+                }
+            }
+            broadcast(@plrr.color(RED).' has been tagged and is IT!')
+            if(@numActive == 1){
+                broadcast(@winner.color(red).' is the '.color(GREEN).color(BOLD).'WINNER'.color(RED).' of Infection Tag!')
+                @plrs = all_players(@world)
+                @numPlayers = array_size(@plrs)
+                
+                if(@numPlayers <= 2){
+                    unbind('infectionTag')
+                    die()
+                }else{
+                    broadcast(@winner.color(red).' is it!')
+                    foreach(@plr in @plrs){
+                        if(@plr != @winner){
+                            export(puuid(@plr).'isItInfectionTag',false)
+                        }else{
+                                export(puuid(@plr).'isItInfectionTag',true)
+                        }
+                    }
+                }
+            }
+        }else{
+            console(@dmgr)
+            cancel()
+        }
+    }
+
+    
+
+<<<

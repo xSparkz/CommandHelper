@@ -1,24 +1,59 @@
-######################################################
-#
-#   Sample Main file. This file is run when the server
-#   starts up, or the plugin is reloaded. It can be used
-#   as an opportunity to register events or do other things
-#   when the server initially starts. Variables defined here
-#   will go out of scope, so you can't assign something and
-#   then use it in a command, for instance.
-#
-######################################################
-
-@server_name = '<Server Name>';
-
-# Echo out a server greeting to the console
-console('Welcome to this server, which is running CommandHelper! (Change this message in plugins/CommandHelper/main.ms)');
-
-# Bind an event to the player join, and tell ops hello.
-# We send in @server_name, so we can use it inside the event handler
-bind(player_join, null, null, @event, @server_name) {
-	# If the player is an op, let's send them a welcome message
-	if(pisop(@event['player'])) {
-		msg('Welcome to '.@server_name.' (Change this message in plugins/CommandHelper/main.ms)');
-	}
+bind(server_command,null,null,@e){
+    @loc = get_command_block()
+    if(@loc != null){
+        @world = @loc['world']
+        include('/home/minecraft/server/plugins/CommandHelper/includes/isWorldExplorable.ms')
+        if(_isWorldExplorable(@world)){
+            cancel()
+            set_block_command(@loc,'')
+        }
+    }else{
+        console('not a commandblock')
+    }
 }
+
+set_interval(5000,closure(
+    @players = all_players()
+    foreach(@player in @players){
+        if(has_permission(@player,'command.rewind')){
+            @ploc = ploc(@player)
+            export(@player.'tracerRewind',@ploc)
+        }
+        if(has_permission(@player,'can.burninsun')){
+            @ploc = ploc(@player)
+            @x = @ploc['x']
+            @y = @ploc['y']
+            @z = @ploc['z']
+            @world = @ploc['world']
+            @curTime = get_world_time(@world)
+            @underBlock = false
+            # if night time 
+            if(@curTime <= 13000 || @curTime >= 23450){
+                for(@y = @y + 1,@y <= 256,@y++){
+                    if(get_block_at(@x,@y,@z,@world) != '0:0'){
+                        @underBlock = true
+                        break()
+                    }
+                }
+                if(!@underBlock){
+                    set_ponfire(@player,100)
+                }
+            }
+        }
+    }
+))
+
+#bind(entity_damage,null,array('type': '/PLAYER/'),@e){
+#    
+#    if(@e['player'] == 'Jiren_The_Grey'){
+#        console(@e)
+#    }
+#
+#}
+#bind(entity_damage_player,null,null,@e){
+#    
+#    if(@e['player'] == 'Jiren_The_Grey'){
+#        console(@e)
+#    }
+#
+#}

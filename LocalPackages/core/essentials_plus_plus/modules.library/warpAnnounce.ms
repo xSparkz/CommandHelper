@@ -1,0 +1,56 @@
+# --------------------------------------------------------------------------
+# Announce when a player uses a warp in colorful letters
+# --------------------------------------------------------------------------
+
+include('includes/rainbowTxt.ms');
+include('includes/broadcastReplace.ms');
+
+register_command(warp_announce, 
+
+    array(
+        
+        description: 'Announce where a player is warping to',
+        
+        usage: '/warp_announce <player> <warp>',
+        
+        permission: 'essentials.warpannounce',
+        
+        noPermMsg: 'Sorry you don\'t have permission to use this command.',
+    
+        executor: closure(@alias, @sender, @args) {		
+    
+            if (array_size(@args) != 2) {
+            
+                msg(''.color(RED).color(BOLD).'Improper Usage!');
+                msg(''.color(RED).'Usage: /warp_announce <player> <warp>');
+                die(); # No need to go further
+            
+            }
+            console(@sender)
+            if(ponline(@sender)){
+                msg(color(RED).'Whoops! Sorry, that\'s not for you to play with!')
+                die()
+            }
+
+            try {          
+ 
+                @targetPlayer = player(@args[1]); # Grab the players name to announce
+                @warpName = @args[0]; # Grab the name of the warp
+                
+                _broadcast(_rainbowText(@targetPlayer).' is heading to: '._rainbowText(@warpName)); # Announce
+                runas(~console, '/warp '.@warpName.' '.@targetPlayer); # Warp the player
+                set_timeout(1500,closure(
+                    tmsg(@targetPlayer,color(RED).'Exit the game using '.color(GREEN).'/exitgame');
+                ))
+                die(); # Done
+            
+            } catch (PlayerOfflineException @ErrorInfo) {
+            
+                msg('Player is Offline'); # Feedback
+                die(); # DOne
+            
+            }
+            
+        }
+    )
+)

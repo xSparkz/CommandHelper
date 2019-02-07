@@ -1,0 +1,9 @@
+test:/test $plr = >>>
+
+        
+    @player = $plr
+    include('/home/minecraft/server/plugins/CommandHelper/includes/mortal.ms')
+
+    _mortal(@player)
+
+<<<

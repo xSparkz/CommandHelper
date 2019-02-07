@@ -1,0 +1,20 @@
+sendtounderworld:/sendtounderworld = >>>
+
+       
+    @loc = array(-1474, 173, 2064, 'alpha')
+
+
+    @plrs = players_in_radius(@loc,10)
+
+    foreach(@plr in @plrs)
+    {
+        set_pmode(@plr,'SPECTATOR')
+        set_pflight(@plr,false)
+    }
+<<<
+sendtounderworld:/sendtounderworld $vic = >>>
+        @vic = $vic
+        @vic = player(@vic)
+        set_pmode(@vic,'SPECTATOR')
+        set_pflight(@vic,false)
+<<<

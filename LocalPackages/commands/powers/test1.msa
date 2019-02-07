@@ -1,0 +1,6 @@
+test1:/test1 $plr = >>>
+
+    include('/home/minecraft/server/plugins/CommandHelper/includes/getHeroClass.ms')
+    msg(_getheroclass($plr))
+
+<<<

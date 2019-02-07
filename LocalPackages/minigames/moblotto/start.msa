@@ -1,0 +1,73 @@
+moblottostart:/moblottostart $x $y $z $world $plr = >>>
+
+    @player = $plr
+    @world = 'moblottery'
+    @loc = array($x,$y,$z,$world)
+    @plrs = all_players(@world)
+    @numPlayers = array_size(@plrs)
+    foreach(@plr in @plrs){
+        if(import(@plr.'activeInMobLottery') ==  true){
+            tmsg(@player,color(red).@plr.' is still alive in Mob Lotto!')
+            die()
+        }
+    }
+    runas(~console,'/mm mob killall')
+    set_block_at(@loc,152)
+    set_timeout(50,closure(
+        set_block_at(@loc,0)
+    ))
+    foreach(@plr in @plrs){
+        if(pinfo(@plr)[5] <= 0.0){
+            @numPlayers--
+            continue()
+        }
+        set_pmode(@plr,'SURVIVAL')
+        sudo('/heal '.@plr)
+        sudo('/minecraft:clear '.@plr)
+        sudo('/warp moblotterystart '.@plr)
+        export(@plr.'activeInMobLottery',true)
+        try(
+        bind(player_death,array(id: @plr.'moblottodeath'),associative_array('player':@plr),@e,@plr){
+            export(@plr.'activeInMobLottery',false)
+            unbind(@plr.'moblottoworldchanged')
+            unbind(@plr.'moblottoquit')
+            set_pmode(@plr,'CREATIVE')
+            unbind()
+        }
+        bind(world_changed,array(id: @plr.'moblottoworldchanged'),associative_array('player':@plr),@e,@plr){
+            export(@plr.'activeInMobLottery',false)
+            unbind(@plr.'moblottodeath')
+            unbind(@plr.'moblottoquit')
+            set_pmode(@plr,'CREATIVE')
+            unbind()
+        }
+        bind(player_quit,array(id: @plr.'moblottoquit'),associative_array('player':@plr),@e,@plr){
+            export(@plr.'activeInMobLottery',false)
+            unbind(@plr.'moblottodeath')
+            unbind(@plr.'moblottoworldchanged')
+            set_pmode(@plr,'CREATIVE')
+            unbind()
+        },)
+    }
+    export('mobLotteryNumPlayers',@numPlayers)
+
+<<<
+
+moblottostart:/moblottostartpart2 $type $amt $x $y $z $world = >>>
+
+    @type = $type
+    @amt = $amt
+    @x = $x
+    @y = $y
+    @z = $z
+    @world = $world
+    @plrs = all_players(@world)
+
+    runas(~console,'/mm mob killall')
+    for(@i = 0,@i < @amt, @i++){
+        @x1 = rand(-2,3) + @x
+        #@y1 = rand(-3,4) + @y
+        @z1 = rand(-2,3) + @z
+        sudo('/mm mobs spawn '.@type.' 1 '.@world.','.@x1.','.@y.','.@z1)
+    }
+<<<

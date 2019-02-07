@@ -1,0 +1,160 @@
+changenumber:/changenumber $facingDir $numDir $numPos $machineID $holox $holoy $holoz $npcid = >>>
+
+    @facingDir = $facingDir
+    @numDir = $numDir
+    @numPos = $numPos
+    @machineID = $machineID
+    @number = associative_array()
+    @ptrStart = get_command_block()
+    @ptr = array()
+    @ptr[1] = @ptrStart[]
+    @ptr[2] = @ptrStart[]
+    @ptr[3] = @ptrStart[]
+    @skullDir = ''
+    @npcID = $npcid
+    @holoLoc = array($holox,$holoy,$holoz,@ptrStart['world'])
+
+    @signLoc = array_deep_clone(@holoLoc)
+
+    @signLoc[1] = @signLoc[1] + 1
+
+    @number[1] = associative_array('num':get_value('heromachine.'.@machineID.'1'))
+    if(@number[1]['num'] == null){
+        @number[1]['num'] = 0
+    }
+    @number[2] = associative_array('num':get_value('heromachine.'.@machineID.'2'))
+    if(@number[2]['num'] == null){
+        @number[2]['num'] = 0
+    }
+    @number[3] = associative_array('num':get_value('heromachine.'.@machineID.'3'))
+    if(@number[3]['num'] == null){
+        @number[3]['num'] = 0
+    }
+    @beforeNum = @number[3]['num'].''.@number[2]['num'].''.@number[1]['num']
+
+if(@facingDir == 'north'){
+        @skullDir = '2'
+        @ptr[1]['z'] -= 2
+        @ptr[2]['z'] -= 2
+        @ptr[3]['z'] -= 2
+        if(@numPos == '1'){
+            @ptr[2]['x'] += 1    
+            @ptr[3]['x'] += 2    
+        }else if(@numPos == '2'){
+            @ptr[1]['x'] -= 1
+            @ptr[3]['x'] += 1
+        }else if(@numPos == '3'){
+            @ptr[2]['x'] -= 1
+            @ptr[1]['x'] -= 2
+        }
+    }else if(@facingDir == 'east'){
+        @skullDir = '5'
+        @ptr[1]['x'] += 2
+        @ptr[2]['x'] += 2
+        @ptr[3]['x'] += 2
+        if(@numPos == '1'){
+            @ptr[2]['z'] += 1    
+            @ptr[3]['z'] += 2    
+        }else if(@numPos == '2'){
+            @ptr[1]['z'] -= 1
+            @ptr[3]['z'] += 1
+        }else if(@numPos == '3'){
+            @ptr[2]['z'] -= 1
+            @ptr[1]['z'] -= 2
+        }
+    }else if(@facingDir == 'west'){
+        @skullDir = '4'
+        @ptr[1]['x'] -= 2
+        @ptr[2]['x'] -= 2
+        @ptr[3]['x'] -= 2
+        if(@numPos == '1'){
+            @ptr[2]['z'] -= 1    
+            @ptr[3]['z'] -= 2    
+        }else if(@numPos == '2'){
+            @ptr[1]['z'] += 1
+            @ptr[3]['z'] -= 1
+        }else if(@numPos == '3'){
+            @ptr[2]['z'] += 1
+            @ptr[1]['z'] += 2
+        }
+    }else if(@facingDir == 'south'){
+        @skullDir = '3'
+        @ptr[1]['z'] += 2
+        @ptr[2]['z'] += 2
+        @ptr[3]['z'] += 2
+        if(@numPos == '1'){
+            @ptr[2]['x'] -= 1    
+            @ptr[3]['x'] -= 2    
+        }else if(@numPos == '2'){
+            @ptr[1]['x'] += 1
+            @ptr[3]['x'] -= 1
+        }else if(@numPos == '3'){
+            @ptr[2]['x'] += 1
+            @ptr[1]['x'] += 2
+        }
+    }
+    if(@numDir == 'up'){
+        @ptr[1]['y'] -= 1
+        @ptr[2]['y'] -= 1
+        @ptr[3]['y'] -= 1
+        @number[@numPos]['num'] += 1
+    }else if(@numDir == 'down'){
+        @ptr[1]['y'] += 1
+        @ptr[2]['y'] += 1
+        @ptr[3]['y'] += 1
+        @number[@numPos]['num'] -= 1
+    }
+
+    if(@number[@numPos]['num'] > 9){
+        @number[@numPos]['num'] = 0
+    }else if(@number[@numPos]['num'] < 0){
+        @number[@numPos]['num'] = 9
+    }
+
+    include('/home/minecraft/server/plugins/CommandHelper/includes/getNumBlockMeta.ms')
+    @number[1]['meta'] = _getNumBlockMeta(@number[1]['num'])
+    @number[2]['meta'] = _getNumBlockMeta(@number[2]['num'])
+    @number[3]['meta'] = _getNumBlockMeta(@number[3]['num'])
+
+    sudo('/minecraft:setblock '.@ptr[@numPos]['x'].' '.@ptr[@numPos]['y'].' '.@ptr[@numPos]['z'].' minecraft:skull '.@skullDir.' destroy '.@number[@numPos]['meta'])
+
+    store_value('heromachine.'.@machineID.'1',@number[1]['num'])
+    store_value('heromachine.'.@machineID.'2',@number[2]['num'])
+    store_value('heromachine.'.@machineID.'3',@number[3]['num'])
+    
+    @stdout = ''
+    @hero = ""
+    #include('/home/minecraft/server/plugins/CommandHelper/includes/updateHologram2.ms')
+
+    @num = @number[3]['num'].''.@number[2]['num'].''.@number[1]['num']
+
+    shell_adv('/home/minecraft/getHeroClassByID.sh '. @num,
+    array(subshell: true,
+        workingDir: '/home/minecraft/',
+        stdout: closure(@a = @stdout){
+            if(@a != "empty")
+            {
+                @contents = read('/home/minecraft/server/plugins/CommandHelper/LocalPackages/commands/chars/'.@a.'.yml')
+                @hero = yml_decode(@contents)
+                #_updateHologram2(@hero['class'],@hero['op'],@npcID,@holoLoc)
+                @part2 = ''
+                @length = length(@hero['class'])
+                if(@length > 15){
+                    @start = @length - (@length - 15)
+                    @part2 = substr(@hero['class'], @start)
+                }
+                @blk = get_block_at(@signLoc)
+                if(@blk[0].@blk[1].@blk[2] == '68:'){
+                    set_sign_text(@signLoc,'',@hero['class'],@part2,'')
+                }
+                
+            }else{
+                #_updateHologram2('remove','',@npcID,@holoLoc)
+                @blk = get_block_at(@signLoc)
+                if(@blk[0].@blk[1].@blk[2] == '68:'){
+                    set_sign_text(@signLoc,'','','','')
+                }
+            }
+        }
+    ))
+<<<

@@ -1,0 +1,6 @@
+2019-02-07 04:30.56 - [CommandHelper][ERROR][COMPILER] COMPILE ERROR: The command /rain is ambiguous because it matches the signature of /rain defined at /home/minecraft/Server/plugins/CommandHelper/aliases.msa:17.2
+	at :/home/minecraft/Server/plugins/CommandHelper/aliases.msa:55.7
+ /home/minecraft/Server/plugins/CommandHelper/aliases.msa:55.7
+2019-02-07 04:38.44 - [CommandHelper][ERROR][RUNTIME] ms.lang.FormatException: Invalid time provided
+	at <<main code>>:/home/minecraft/Server/plugins/CommandHelper/aliases.msa:58.16
+ /home/minecraft/Server/plugins/CommandHelper/aliases.msa:58.16
